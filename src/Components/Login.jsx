@@ -1,15 +1,17 @@
-import axios from "axios";
+
+import { BASE_URL } from "../utils/constants";
 import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/constants";
+
 import { gsap } from "gsap";
 import AnimatedBackground from "./AnimatedBackground";
 import DevTinderLogo from "./DevTinderLogo";
 
 const Login = () => {
   const [emailId, setEmail] = useState("");
+  const titleRef = useRef();
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -18,7 +20,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cardRef = useRef();
-  const titleRef = useRef();
+
 
   useEffect(() => {
     // Animate card entrance
@@ -50,20 +52,26 @@ const Login = () => {
     }
     
     try {
-      const res = await axios.post(
-        `${BASE_URL}/login`,
-        {
+      const res = await fetch(`${BASE_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           emailId,
           password,
-        },
-        { withCredentials: true }
-      );
-
-      dispatch(addUser(res.data.user));
+        }),
+      });
+      
+      if (!res.ok) {
+        throw new Error('Login failed');
+      }
+      
+      const data = await res.json();
+      dispatch(addUser(data.user));
       return navigate("/");
     } catch (err) {
-
-      setError(err.response?.data?.message || err.message || "Login failed");
+      setError(err.message || "Login failed");
     }
   };
 
@@ -75,24 +83,28 @@ const Login = () => {
     }
     
     try {
-      const res = await axios.post(
-        `${BASE_URL}/signup`,
-        {
+      const res = await fetch(`${BASE_URL}/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           firstName,
           lastName,
           emailId,
           password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      dispatch(addUser(res.data.user));
+        }),
+      });
+      
+      if (!res.ok) {
+        throw new Error('Signup failed');
+      }
+      
+      const data = await res.json();
+      dispatch(addUser(data.user));
       return navigate("/profile");
     } catch (error) {
-
-      setError(error.response?.data?.message || error.message || "Signup failed");
+      setError(error.message || "Signup failed");
     }
   };
 

@@ -1,1 +1,1 @@
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://your-domain.com/api"
+export const BASE_URL = "https://devtinder-gqw5xysvx-devlopertinders-projects.vercel.app"
