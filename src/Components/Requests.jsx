@@ -66,7 +66,7 @@ const Requests = () => {
             No Connection Requests
           </h1>
           <p className="text-gray-300 mb-6">
-            You haven't received any connection requests yet. Keep networking!
+            You haven&apos;t received any connection requests yet. Keep networking!
           </p>
           <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-white/10 rounded-xl p-4">
             <p className="text-sm text-gray-400">

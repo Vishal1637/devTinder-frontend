@@ -1,10 +1,8 @@
-
 import { BASE_URL } from "../utils/constants";
 import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
-
 import { gsap } from "gsap";
 import AnimatedBackground from "./AnimatedBackground";
 import DevTinderLogo from "./DevTinderLogo";
@@ -21,7 +19,6 @@ const Login = () => {
   const navigate = useNavigate();
   const cardRef = useRef();
 
-
   useEffect(() => {
     // Animate card entrance
     gsap.fromTo(cardRef.current, 
@@ -30,6 +27,7 @@ const Login = () => {
     );
     
     // Animate title
+
     gsap.fromTo(titleRef.current,
       { y: -50, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.6, delay: 0.3, ease: "power2.out" }
@@ -50,7 +48,6 @@ const Login = () => {
       setError("Please fill in all fields");
       return;
     }
-    
     try {
       const res = await fetch(`${BASE_URL}/login`, {
         method: 'POST',
@@ -62,13 +59,14 @@ const Login = () => {
           password,
         }),
       });
-      
       if (!res.ok) {
         throw new Error('Login failed');
       }
       
       const data = await res.json();
+      console.log('Login response:', data);
       dispatch(addUser(data.user));
+      console.log('User dispatched, navigating to /');
       return navigate("/");
     } catch (err) {
       setError(err.message || "Login failed");
@@ -81,10 +79,10 @@ const Login = () => {
       setError("Please fill in all fields");
       return;
     }
-    
     try {
       const res = await fetch(`${BASE_URL}/signup`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -95,7 +93,6 @@ const Login = () => {
           password,
         }),
       });
-      
       if (!res.ok) {
         throw new Error('Signup failed');
       }

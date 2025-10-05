@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addFeed } from "../utils/feedSlice";
@@ -15,12 +15,21 @@ const Feed = () => {
     
     try {
       console.log('Trying to fetch from backend:', BASE_URL + '/feed');
-      const response = await axios.get(BASE_URL + "/feed", {
-        withCredentials: true,
-        timeout: 10000, // 10 second timeout
+      const response = await fetch(BASE_URL + "/feed", {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
-      console.log('Backend response:', response.data);
-      dispatch(addFeed(response.data.data || response.data));
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Backend response:', data);
+      dispatch(addFeed(data.data || data));
     } catch (error) {
       if (error.response?.status === 401) {
         console.error('❌ Authentication failed - Please login first');

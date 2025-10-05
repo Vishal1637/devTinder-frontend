@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import AnimatedBackground from "./AnimatedBackground";
-import axios from "axios";
+
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
@@ -13,26 +13,9 @@ const Body = () => {
   const user = useSelector((store) => store.user);
   const [loading, setLoading] = useState(true);
 
-  const fetchUser = useCallback(async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/profile/view`, {
-        withCredentials: true,
-      });
-      dispatch(addUser(response.data.user));
-    } catch (err) {
-      console.error("Failed to fetch user:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [dispatch]);
-
   useEffect(() => {
-    if (!user) {
-      fetchUser();
-    } else {
-      setLoading(false);
-    }
-  }, [user, fetchUser]);
+    setLoading(false);
+  }, []);
 
   if (loading) {
     return (
